@@ -22,7 +22,7 @@ program MetodoSecante
     x0 = -1.5d0
     x1 = 2.0d0
     
-    m = 5.0d0 !raiz desejada
+    m = 23.0d0 !raiz desejada
     
     !deg = 5
     !allocate(coef(deg))
@@ -44,6 +44,9 @@ program MetodoSecante
     !xmin = secante(x0,x1,maxiter,e1,e2,n1,n2,p1,p2,c1,c2)
     !fmin = f(xmin,n1,n2,p1,p2,c1,c2)
 
+    print*,"Pontos iniciais: "
+    print*,"x0 = ",x0
+    print*,"x1 = ",x1
     print*,"Solucao: ",xmin
     print*,"Valor da funcao: ",fmin
 

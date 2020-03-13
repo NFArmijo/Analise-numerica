@@ -21,7 +21,7 @@ program MetodoNewton
     e2 = 1.0d-5
     x0 = 10.0d0
     
-    m = 5.0d0 !raiz desejada
+    m = 23.0d0 !raiz desejada
     
     !c1 = 15.0d0
     !c2 = 23.0d0
@@ -43,6 +43,7 @@ program MetodoNewton
     !xmin = newton(x0,maxiter,e1,e2,n1,n2,p1,p2,c1,c2)
     !fmin = f(xmin,n1,n2,p1,p2,c1,c2)
     
+    print*,"Ponto inicial: x0 = ",x0
     print*,"Solucao: ",xmin
     print*,"Valor da funcao: ",fmin
 

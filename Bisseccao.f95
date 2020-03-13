@@ -23,7 +23,7 @@ program MetodoBisseccao
     a = 0d0
     b = 5.0d0
     
-    m = 5 !raiz desejada
+    m = 23.0d0 !raiz desejada
     
     !c1 = 15.0d0
     !c2 = 23.0d0
@@ -36,6 +36,7 @@ program MetodoBisseccao
     !allocate(coef(deg))
     !coef = (/-1.0,1.0,2.0,3.0,4.0,5.0/)
     
+    print*,"Intervalo inicial: [",a,b,"]"
     xmin = bisseccao(m,a,b,maxiter,e1,e2)
     fmin = f(xmin,m)
     
