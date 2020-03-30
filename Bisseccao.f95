@@ -103,7 +103,10 @@ program MetodoBisseccao
             
             !fb = f(b,n1,n2,p1,p2,c1,c2)
             !fp = f(p,n1,n2,p1,p2,c1,c2)
-        
+            
+            print*,"erro: ",abs(fp)
+            print*,"tamanho_intervalo: ",abs(b-a)
+            
             numiter=numiter+1
         end do
     

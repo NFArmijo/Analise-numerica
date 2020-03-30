@@ -110,6 +110,8 @@ program MetodoSecante
             !fn = f(xn,n1,n2,p1,p2,c1,c2)
             !fm = f(xm,n1,n2,p1,p2,c1,c2)
         
+            print*,"erro: ",abs(fn)
+        
             numiter=numiter+1
         end do
     

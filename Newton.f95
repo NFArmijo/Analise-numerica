@@ -94,7 +94,9 @@ program MetodoNewton
             !fnder = fder(xn,n1,n2,p1,p2,c1,c2)
             !xn = xn - fn/fnder
             !fn = f(xn,n1,n2,p1,p2,c1,c2)
-        
+            
+            print*,"erro: ",abs(fn)
+            
             numiter=numiter+1
         end do
     
