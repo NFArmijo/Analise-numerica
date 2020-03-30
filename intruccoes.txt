@@ -1,0 +1,19 @@
+
+Para testar os métodos de Bissecao,
+Newton e Secante precisa,
+
+1) Um arquivo "nome_module.f95" tipo "module" com as funcões original "f" e sua deriavda
+"fder" com seus respectivos argumentos "(x,...)". As variaveis reais de tipo "real(kind=8)"
+
+2) Compilar o module com a função a testar
+	gfortran -c "nome_module.f95"
+
+3) Modificar o arquivo do método que quer usar, chamando o módulo. Por exemplo
+no arquivo "Newton.f95" na linha 3 do código escrever "use nome_module.f95".
+Aliás definir todos argumentos que precisa a função test.
+
+4) Dentro do código subtituir todas a "f" e "fder" pela sua função isto se sua função test tem 9
+argumentos, subtituir por exemplo "f(xn,m)" e "fder(xn,m)" por "f(a1,...,a9)" e "fder(a1,...,a9)".
+
+5) Para compilar usar "gfortran nome_module.o Metodo.f95 -o metodo". Por exemplo para usar Newton fica
+"gfortran nome_module.o Newton.f95 -o newton"
