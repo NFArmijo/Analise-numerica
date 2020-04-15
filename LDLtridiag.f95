@@ -12,13 +12,13 @@ program LDLtridiag
     allocate(b(n-1))
     allocate(solSist(n))
     
-    a =  (/10,20,30,40/)
-    b =  (/1,2,2/)
+    !---------- EXEMPLO ---------
+    
+    a =  (/10,21,300,4145/)
+    b =  (/0.11,2.5,20.97/)
     c = (/1,1,1,1/)
     
     solSist = thomas3diag(a,b,c,n)
-    
-    print*, 'The solution of the system Ax=b is: ', solSist
 
     !----------------------------------------------------------------------------------------------------------
     !------------------------------------------ Decomposição LDL Tridiagonal-----------------------------------
@@ -34,7 +34,7 @@ program LDLtridiag
         real(kind=8), dimension(n), intent(out) :: d
         real(kind=8), dimension(n-1), intent(out) :: l
         
-        integer :: i,j
+        integer :: i
         
         d(1) = a(1)
         l(1) = b(1)/d(1)
@@ -46,13 +46,7 @@ program LDLtridiag
         
         d(n) = a(n)-b(n-1)*l(n-1)
         
-        print*, 'L : ', l
-        print*, 'D : ', d
-        
     end subroutine ldl3diag
-    
-    !----------------------------------------------------------------------------------------------------------
-    !----------------------------------------------------------------------------------------------------------
     
     !----------------------------------------------------------------------------------------------------------
     !------------------------------------------ Método de Thomas ---------------------------------------------
@@ -84,6 +78,18 @@ program LDLtridiag
         do i=n,1,-1
             thomas3diag(i) = aux(i)-l(i)*thomas3diag(i+1)
         end do
+        
+        print*, ' '
+        print*, 'Matrix A, diagonal: ', a
+        print*, 'Matrix A, subdiagonal : ', b
+        print*, ' '
+        print*, 'Independent vector b : ', c
+        print*, ' '
+        print*, 'L matrix : ', l
+        print*, 'D matrix : ', d
+        print*, ' '
+        print*, 'The solution of the system Ax=b is: ', solSist
+        print*, ' '
         
     end function
     
