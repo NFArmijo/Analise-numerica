@@ -12,25 +12,30 @@ program EP3
     
     !---------- EXEMPLO ---------
     
-    tol = 0.000001d0
-    max_iter = 100000
-    n = 3
-    !w = 1.0d0
+    tol = 0.000001d0 !10^-6
+    max_iter = 10000
+    n = 256 !completar
+    
     allocate(solSist(n-1,n-1),X0(n-1,n-1))
     
-    X0 = 0.0d0
+    ! PONTO INICIAL 
     
+    X0 = 0.0d0
     !CALL RANDOM_NUMBER(X0)
+    
+    ! CICLO PARA ENCONTRAR W
     
     do i=1,101
         w = 0.99d0+(real(i)/100)
         call sor_method(X0,n,w,max_iter,tol,0,solSist,num_iter)
         iter_vec(i) = num_iter
+        print*, 100*w-100, '%'
     end do
     
     call elem_min(iter_vec,101,min_iter)
+    print*, 'Iteracao final....'
     call sor_method(X0,n,0.99d0+(real(min_iter)/100),max_iter,tol,1,solSist,num_iter)
-    
+    print*, 'Finalizado'
     
     contains
     
@@ -58,7 +63,7 @@ program EP3
     end
     
     !------------------------------------------------------------------------------------------
-    !------------------------------------------ Máximo do vetor ------------------------------------
+    !------------------------------------------ Minimo do vetor ------------------------------------
     !------------------------------------------------------------------------------------------
     
     subroutine elem_min(v,d,m)
@@ -152,11 +157,11 @@ program EP3
         
         
         if (wrt .EQ. 1) then
-            open(1, file = 'resultadosEP3n3.txt', status = 'new')
-            write(1,*) w
-            write(1,*) num_iter
-            write(1,*) erro
-            write(1,*) sor
+            open(1, file = 'resultadosEP3.txt', status = 'new')
+            write(1,*) 'Parametro w otimo: ', w
+            write(1,*) 'Numero de iteracoes w otimo: ', num_iter
+            write(1,*) 'Erro da apriximacao: ', erro
+            write(1,*) 'Solucao aproximada: ', sor
             close(1)
         end if
         
