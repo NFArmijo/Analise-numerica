@@ -57,9 +57,12 @@ program Rayleigh_Ritz
 !     end do
     
     !--------------------------- Exercício 2 --------------------------
-    
-!     do j=4,8
+        
+!     !open(1, file = 'erroExer2v2.txt', status = 'new')
 !         
+!     do j=4,8
+! 
+!         !n = j
 !         n = 2**j-1
 !         
 !         allocate(a(n))      !Diagonal da matriz
@@ -99,15 +102,17 @@ program Rayleigh_Ritz
 !         do i=1,10*n
 !             k = int(((real(i)-1)*(real(n)+1))/(10*real(n)))+1
 !             if (k .NE. 1 .AND. k .NE. n+1) then
-!                 u(i) = c(k-1)*aux*((real(i)/(10*real(n)))-((real(k)-1)/aux)) + c(k)*aux*((real(k)/aux)-(real(i)/(10*real(n))))
+!                 u(i) = c(k)*aux*(((real(i)-1)/(10*real(n)))-((real(k)-1)/aux)) + c(k-1)*aux*((real(k)/aux) &
+!                 -((real(i)-1)/(10*real(n))))
 !             elseif (k .EQ. 1) then
-!                 u(i) = c(k)*aux*(real(i)/(10*real(n)))
+!                 u(i) = c(k)*aux*((real(i)-1)/(10*real(n)))
 !             else
-!                 u(i) = c(k-1)*aux*(1-(real(i)/(10*real(n))))
+!                 u(i) = c(k-1)*aux*(1-((real(i)-1)/(10*real(n))))
 !             end if
 !             ureal(i) = (((real(i)-1)/(10*real(n)))**2)*((1-((real(i)-1)/(10*real(n))))**2)
 !             udif(i) = u(i)-ureal(i)
 !         end do
+! 
 !         
 !         u(10*n+1) = 0.0d0
 !         ureal(10*n+1) = 0.0d0
@@ -117,8 +122,10 @@ program Rayleigh_Ritz
 !         
 !         print*, 'Error of the approximation of the sol of the EDO: ', erro
 !         print*, ' '
-!         !print*, 'Approximated solution of the EDO: ', u
+!         print*, 'Approximated solution of the EDO: ', u
 !         print*, ' '
+!         
+!         !write(1,*) erro
 !         
 !         deallocate(a)
 !         deallocate(b)
@@ -129,10 +136,14 @@ program Rayleigh_Ritz
 !         deallocate(udif)
 !         
 !     end do
+!     
+!     !close(1)
     
     !----------------------------- Exercício 3 -----------------------------------
     
-    pi = 3.14159265359d0
+    !open(1, file = 'erroExer3.txt', status = 'new')
+    
+    pi = 3.14159265d0
     
     do j=4,8
         
@@ -141,7 +152,7 @@ program Rayleigh_Ritz
         allocate(a(n))      !Diagonal da matriz
         allocate(b(n-1))    !Subdiagonal da matriz
         allocate(d(n))      !Vetor independente
-        allocate(c(n))      !Solução do sistema
+        allocate(c(n))      !Solução do sistema. Coeficientes da combinação linear splines
         allocate(u(10*n+1))      !Aproximação da função solução da EDO
         allocate(ureal(10*n+1))  !Função solução da EDO
         allocate(udif(10*n+1))   !Diferença das soluções
@@ -153,32 +164,33 @@ program Rayleigh_Ritz
             aux1 = pi*(real(i)/aux)
             aux2 = pi*((real(i)+1)/aux)
             
-            d(i) = aux*( (-2*sin(aux0))+(4*sin(aux1))-(2*sin(aux2))+(2*cos(aux1)*(aux0-2*aux1+aux2)) )
+            d(i) = 2*aux*( 2*sin(aux1)-sin(aux0)-sin(aux2)+(cos(aux1))*(aux0-2*aux1+aux2) )
             
-            a(i) = 2*aux+((2*(pi**2))/(3*aux))
+            a(i) = (2*aux) + ((2*(pi**2))/(3*aux))
             b(i) = -aux+((pi**2)/(6*aux))
             
         end do
         
         aux0 = pi*((real(n)-1)/aux)
         aux1 = pi*(real(n)/aux)
-        aux2 = 1.0d0
+        aux2 = pi
         
-        a(n) = 2*aux+(2*(pi**2))/(3*aux)
-        d(n) = aux*( -2*sin(aux0)+4*sin(aux1)-2*sin(aux2)+2*cos(aux1)*(aux0-2*aux1+aux2) )
+        a(n) = (2*aux) + ((2*(pi**2))/(3*aux))
+        d(n) = 2*aux*( 2*sin(aux1)-sin(aux0)-sin(aux2)+(cos(aux1))*(aux0-2*aux1+aux2) )
     
         c = thomas3diag(a,b,d,n)
         
         do i=1,10*n
             k = int(((real(i)-1)*(real(n)+1))/(10*real(n)))+1
             if (k .NE. 1 .AND. k .NE. n+1) then
-                u(i) = c(k-1)*aux*((real(i)/(10*real(n)))-((real(k)-1)/aux)) + c(k)*aux*((real(k)/aux)-(real(i)/(10*real(n))))
+                u(i) = c(k)*aux*(((real(i)-1)/(10*real(n)))-((real(k)-1)/aux)) + c(k-1)*aux*((real(k)/aux) &
+                -((real(i)-1)/(10*real(n))))
             elseif (k .EQ. 1) then
-                u(i) = c(k)*aux*(real(i)/(10*real(n)))
+                u(i) = c(k)*aux*((real(i)-1)/(10*real(n)))
             else
-                u(i) = c(k-1)*aux*(1-(real(i)/(10*real(n))))
+                u(i) = c(k-1)*aux*(1-((real(i)-1)/(10*real(n))))
             end if
-            ureal(i) = sin(pi*(real(i)/(10*real(n))))
+            ureal(i) = sin(pi*((real(i)-1)/(10*real(n))))
             udif(i) = u(i)-ureal(i)
         end do
         
@@ -190,8 +202,10 @@ program Rayleigh_Ritz
         
         print*, 'Error of the approximation of the sol of the EDO: ', erro
         print*, ' '
-        !print*, 'Approximated solution of the EDO: ', u
+        print*, 'Approximated solution of the EDO: ', u
         print*, ' '
+        
+        !write(1,*) erro
         
         deallocate(a)
         deallocate(b)
@@ -200,6 +214,8 @@ program Rayleigh_Ritz
         deallocate(u)
         deallocate(ureal)
         deallocate(udif)
+        
+        !close(1)
         
     end do
     
@@ -238,7 +254,7 @@ program Rayleigh_Ritz
         integer(kind=8) :: n
         real(kind=8), dimension(n) :: a,c
         real(kind=8), dimension(n-1) :: b
-        integer :: i
+        integer(kind=8) :: i
         real(kind=8), dimension(n) :: d
         real(kind=8), dimension(n-1) :: l
         real(kind=8), dimension(n) :: thomas3diag
@@ -262,11 +278,13 @@ program Rayleigh_Ritz
         
         !print*, ' '
         !print*, 'Matrix A, diagonal: ', a
+        !print*, ' '
         !print*, 'Matrix A, subdiagonal : ', b
         !print*, ' '
         !print*, 'Independent vector b : ', c
         !print*, ' '
         !print*, 'L matrix : ', l
+        !print*, ' '
         !print*, 'D matrix : ', d
         !print*, ' '
         !print*, 'The solution of the system Ac=d is: ', thomas3diag !solSist
