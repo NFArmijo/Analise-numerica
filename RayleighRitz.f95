@@ -11,7 +11,9 @@ program Rayleigh_Ritz
     real(kind=8) :: aux,aux0,aux1,aux2
     integer(kind=8) :: n,i,j,k
     
-    !-------------------------- Exercício 1 ---------------------------------
+    !------------------------------------------------------------------------------------
+    !----------------------------------------- Exercício 1 -----------------------------------
+    !---------------------------------------------------------------------------------------
     
 !     do j=4,8
 !         n = 2**j-1
@@ -24,19 +26,21 @@ program Rayleigh_Ritz
 !         allocate(ureal(n))  !Função solução da EDO
 !         allocate(udif(n))   !Diferença das soluções
 !     
-!         do i=1,n-1
-!             d(i) = (1/(real(n)+1))*(((real(i)+1)**2)/2+real(i)**2+((real(i)-1)**2)/2-(real(i)-1)*real(i)-real(i)*(real(i)+1))
-!             a(i) = 2*(real(n)+1)
-!             b(i) = -real(n)-1
-!         end do
-!         a(n) = 2*(real(n)+1)
-!         d(n) = (1/(real(n)+1))*(((real(n)+1)**2)/2+real(n)**2+((real(n)-1)**2)/2-(real(n)-1)*real(n)-real(n)*(real(n)+1))
+!         aux = real(n)+1
 !     
+!         do i=1,n-1
+!             d(i) = 1/aux
+!             a(i) = 2*aux
+!             b(i) = -aux
+!         end do
+!         a(n) = 2*aux
+!         d(n) = 1/aux
+!         
 !         c = thomas3diag(a,b,d,n)
 !     
 !         do i=1,n
 !             u(i) = c(i)
-!             ureal(i) = 0.5d0*(real(i)/(real(n)+1))*(1-(real(i)/(real(n)+1)))
+!             ureal(i) = 0.5d0*(real(i)/aux)*(1-(real(i)/aux))
 !             udif(i) = u(i)-ureal(i)
 !         end do
 !     
@@ -56,13 +60,14 @@ program Rayleigh_Ritz
 ! 
 !     end do
     
-    !--------------------------- Exercício 2 --------------------------
+    !------------------------------------------------------------------------------------
+    !----------------------------------------- Exercício 2 -----------------------------------
+    !---------------------------------------------------------------------------------------
         
 !     !open(1, file = 'erroExer2v2.txt', status = 'new')
 !         
 !     do j=4,8
 ! 
-!         !n = j
 !         n = 2**j-1
 !         
 !         allocate(a(n))      !Diagonal da matriz
@@ -122,10 +127,10 @@ program Rayleigh_Ritz
 !         
 !         print*, 'Error of the approximation of the sol of the EDO: ', erro
 !         print*, ' '
-!         print*, 'Approximated solution of the EDO: ', u
-!         print*, ' '
+!         !print*, 'Approximated solution of the EDO: ', u
+!         !print*, ' '
 !         
-!         !write(1,*) erro
+!         !write(1,*) erro, (aux**2)*erro
 !         
 !         deallocate(a)
 !         deallocate(b)
@@ -139,87 +144,95 @@ program Rayleigh_Ritz
 !     
 !     !close(1)
     
-    !----------------------------- Exercício 3 -----------------------------------
+    !------------------------------------------------------------------------------------
+    !----------------------------------------- Exercício 3 -----------------------------------
+    !---------------------------------------------------------------------------------------
     
-    !open(1, file = 'erroExer3.txt', status = 'new')
+!     !open(1, file = 'erroExer3v2.txt', status = 'new')
+!     
+!     pi = 3.14159265d0
+!     
+!     do j=4,8
+!         
+!         n = 2**j-1
+!         
+!         allocate(a(n))      !Diagonal da matriz
+!         allocate(b(n-1))    !Subdiagonal da matriz
+!         allocate(d(n))      !Vetor independente
+!         allocate(c(n))      !Solução do sistema. Coeficientes da combinação linear splines
+!         allocate(u(10*n+1))      !Aproximação da função solução da EDO
+!         allocate(ureal(10*n+1))  !Função solução da EDO
+!         allocate(udif(10*n+1))   !Diferença das soluções
+!     
+!         aux = real(n)+1
+!         
+!         do i=1,n-1
+!             aux0 = pi*((real(i)-1)/aux)
+!             aux1 = pi*(real(i)/aux)
+!             aux2 = pi*((real(i)+1)/aux)
+!             
+!             d(i) = 2*aux*( 2*sin(aux1)-sin(aux0)-sin(aux2)+(cos(aux1))*(aux0-2*aux1+aux2) )
+!             
+!             a(i) = (2*aux) + ((2*(pi**2))/(3*aux))
+!             b(i) = -aux+((pi**2)/(6*aux))
+!             
+!         end do
+!         
+!         aux0 = pi*((real(n)-1)/aux)
+!         aux1 = pi*(real(n)/aux)
+!         aux2 = pi
+!         
+!         a(n) = (2*aux) + ((2*(pi**2))/(3*aux))
+!         d(n) = 2*aux*( 2*sin(aux1)-sin(aux0)-sin(aux2)+(cos(aux1))*(aux0-2*aux1+aux2) )
+!     
+!         c = thomas3diag(a,b,d,n)
+!         
+!         do i=1,10*n
+!             k = int(((real(i)-1)*(real(n)+1))/(10*real(n)))+1
+!             if (k .NE. 1 .AND. k .NE. n+1) then
+!                 u(i) = c(k)*aux*(((real(i)-1)/(10*real(n)))-((real(k)-1)/aux)) + c(k-1)*aux*((real(k)/aux) &
+!                 -((real(i)-1)/(10*real(n))))
+!             elseif (k .EQ. 1) then
+!                 u(i) = c(k)*aux*((real(i)-1)/(10*real(n)))
+!             else
+!                 u(i) = c(k-1)*aux*(1-((real(i)-1)/(10*real(n))))
+!             end if
+!             ureal(i) = sin(pi*((real(i)-1)/(10*real(n))))
+!             udif(i) = u(i)-ureal(i)
+!         end do
+!         
+!         u(10*n+1) = 0.0d0
+!         ureal(10*n+1) = 0.0d0
+!         udif(10*n+1) = u(10*n+1)-ureal(10*n+1)
+!     
+!         erro = norm_inf(udif,10*n+1)
+!         
+!         print*, 'Error of the approximation of the sol of the EDO: ', erro
+!         print*, ' '
+!         !print*, 'Approximated solution of the EDO: ', u
+!         !print*, ' '
+!         
+!         !write(1,*) erro, (aux**2)*erro
+!         
+!         deallocate(a)
+!         deallocate(b)
+!         deallocate(d)
+!         deallocate(c)
+!         deallocate(u)
+!         deallocate(ureal)
+!         deallocate(udif)
+!         
+!         
+!     end do
+!     
+!     !close(1)
     
-    pi = 3.14159265d0
+    !------------------------------------------------------------------------------------------
+    !------------------------------------------------------------------------------------------
     
-    do j=4,8
-        
-        n = 2**j-1
-        
-        allocate(a(n))      !Diagonal da matriz
-        allocate(b(n-1))    !Subdiagonal da matriz
-        allocate(d(n))      !Vetor independente
-        allocate(c(n))      !Solução do sistema. Coeficientes da combinação linear splines
-        allocate(u(10*n+1))      !Aproximação da função solução da EDO
-        allocate(ureal(10*n+1))  !Função solução da EDO
-        allocate(udif(10*n+1))   !Diferença das soluções
-    
-        aux = real(n)+1
-        
-        do i=1,n-1
-            aux0 = pi*((real(i)-1)/aux)
-            aux1 = pi*(real(i)/aux)
-            aux2 = pi*((real(i)+1)/aux)
-            
-            d(i) = 2*aux*( 2*sin(aux1)-sin(aux0)-sin(aux2)+(cos(aux1))*(aux0-2*aux1+aux2) )
-            
-            a(i) = (2*aux) + ((2*(pi**2))/(3*aux))
-            b(i) = -aux+((pi**2)/(6*aux))
-            
-        end do
-        
-        aux0 = pi*((real(n)-1)/aux)
-        aux1 = pi*(real(n)/aux)
-        aux2 = pi
-        
-        a(n) = (2*aux) + ((2*(pi**2))/(3*aux))
-        d(n) = 2*aux*( 2*sin(aux1)-sin(aux0)-sin(aux2)+(cos(aux1))*(aux0-2*aux1+aux2) )
-    
-        c = thomas3diag(a,b,d,n)
-        
-        do i=1,10*n
-            k = int(((real(i)-1)*(real(n)+1))/(10*real(n)))+1
-            if (k .NE. 1 .AND. k .NE. n+1) then
-                u(i) = c(k)*aux*(((real(i)-1)/(10*real(n)))-((real(k)-1)/aux)) + c(k-1)*aux*((real(k)/aux) &
-                -((real(i)-1)/(10*real(n))))
-            elseif (k .EQ. 1) then
-                u(i) = c(k)*aux*((real(i)-1)/(10*real(n)))
-            else
-                u(i) = c(k-1)*aux*(1-((real(i)-1)/(10*real(n))))
-            end if
-            ureal(i) = sin(pi*((real(i)-1)/(10*real(n))))
-            udif(i) = u(i)-ureal(i)
-        end do
-        
-        u(10*n+1) = 0.0d0
-        ureal(10*n+1) = 0.0d0
-        udif(10*n+1) = u(10*n+1)-ureal(10*n+1)
-    
-        erro = norm_inf(udif,10*n+1)
-        
-        print*, 'Error of the approximation of the sol of the EDO: ', erro
-        print*, ' '
-        print*, 'Approximated solution of the EDO: ', u
-        print*, ' '
-        
-        !write(1,*) erro
-        
-        deallocate(a)
-        deallocate(b)
-        deallocate(d)
-        deallocate(c)
-        deallocate(u)
-        deallocate(ureal)
-        deallocate(udif)
-        
-        !close(1)
-        
-    end do
-    
-    !------------------------------------------------------------------------
+    !--------------------------------------------------------------------------------------------------
+    !------------------------------------------ LDL^T tridiagonal ----------------------------------
+    !---------------------------------------------------------------------------------------------
     
     contains
     
